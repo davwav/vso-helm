@@ -1,0 +1,26 @@
+apiVersion: secrets.hashicorp.com/v1beta1
+kind: VaultStaticSecret
+metadata:
+  name: vault-static-secret
+spec:
+  vaultAuthRef: vault-auth
+  mount: applications
+  type: kv-v2
+  path: gateway
+  refreshAfter: 10s
+  destination:
+    create: true
+    name: vso-gateway
+---
+apiVersion: secrets.hashicorp.com/v1beta1
+kind: VaultAuth
+metadata:
+  name: vault-auth
+spec:
+  method: kubernetes
+  mount: vso
+  kubernetes:
+    role: vso
+    serviceAccount: vault-auth-test
+    audiences:
+    - vault
